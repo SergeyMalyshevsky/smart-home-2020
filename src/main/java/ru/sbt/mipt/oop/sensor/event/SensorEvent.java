@@ -1,6 +1,4 @@
-package ru.sbt.mipt.oop;
-
-import static ru.sbt.mipt.oop.SensorEventType.*;
+package ru.sbt.mipt.oop.sensor.event;
 
 public class SensorEvent {
     private final SensorEventType type;
@@ -25,19 +23,5 @@ public class SensorEvent {
                 "type=" + type +
                 ", objectId='" + objectId + '\'' +
                 '}';
-    }
-
-    public boolean isLightType() {
-        if (type == LIGHT_ON || type == LIGHT_OFF) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean isDoorType() {
-        if (type == DOOR_OPEN || type == DOOR_CLOSED) {
-            return true;
-        }
-        return false;
     }
 }
