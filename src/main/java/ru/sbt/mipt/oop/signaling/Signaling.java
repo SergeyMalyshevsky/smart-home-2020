@@ -1,34 +1,26 @@
 package ru.sbt.mipt.oop.signaling;
 
-public class Signaling implements SignalingState{
+public class Signaling {
     SignalingState state;
+    String code = "123456";
 
-    public Signaling(SignalingState state) {
-        this.state = state;
+    public Signaling() {
+        this.state = new SignalingDeactivateState();
     }
 
-    private void changeState(SignalingState state) {
-        this.state = state;
+    public void activate() {
+        this.state = state.activate(this.code);
     }
 
-    @Override
-    public void activate(String code) {
-        SignalingState activateState = new SignalingActivateState();
-        changeState(activateState);
-        state.activate(code);
-    }
-
-    @Override
     public void deactivate(String code) {
-        SignalingState activateState = new SignalingDeactivateState();
-        changeState(activateState);
-        state.deactivate(code);
+        this.state = state.deactivate(code);
     }
 
-    @Override
-    public void switchToAlarmMode() {
-        SignalingState activateState = new SignalingAlarmState();
-        changeState(activateState);
-        state.switchToAlarmMode();
+    public void alarm() {
+        this.state = state.alarm();
+    }
+
+    public void stopAlarm() {
+        this.state = state.deactivate(this.code);
     }
 }

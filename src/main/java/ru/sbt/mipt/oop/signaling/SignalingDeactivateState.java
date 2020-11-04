@@ -1,18 +1,25 @@
 package ru.sbt.mipt.oop.signaling;
 
-public class SignalingDeactivateState implements SignalingState{
-    @Override
-    public void activate(String code) {
+public class SignalingDeactivateState implements SignalingState {
 
+    public SignalingDeactivateState() {
+        System.out.println("Signaling is deactivated");
     }
 
     @Override
-    public void deactivate(String code) {
-
+    public SignalingState activate(String code) {
+        return new SignalingActivateState(code);
     }
 
     @Override
-    public void switchToAlarmMode() {
+    public SignalingState deactivate(String code) {
+        System.out.println("Signaling is already deactivated");
+        return this;
+    }
 
+    @Override
+    public SignalingState alarm() {
+        System.out.println("Signaling is deactivated");
+        return this;
     }
 }
