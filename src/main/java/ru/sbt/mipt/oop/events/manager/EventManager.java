@@ -16,6 +16,11 @@ public class EventManager implements IEventManager {
         this.smartHome = smartHome;
     }
 
+    public EventManager(SmartHome smartHome, List<IEventHandler> eventHandlers) {
+        this.smartHome = smartHome;
+        this.eventHandlers = eventHandlers;
+    }
+
     @Override
     public void setSmartHome(SmartHome smartHome) {
         this.smartHome = smartHome;

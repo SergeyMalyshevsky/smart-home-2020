@@ -12,8 +12,8 @@ import static ru.sbt.mipt.oop.sensor.event.SensorEventType.*;
 public class CCSensorEventToSensorEventMapper {
     Map<String, SensorEventType> map;
 
-    public CCSensorEventToSensorEventMapper(Map<String, SensorEventType> map) {
-        this.map = map;
+    public CCSensorEventToSensorEventMapper(EventTypeMapper mapper) {
+        this.map = mapper.getMap();
     }
 
     private SensorEventType getSensorEventType(CCSensorEvent event) {
