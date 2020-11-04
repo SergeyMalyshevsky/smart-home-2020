@@ -10,7 +10,6 @@ public class SignalingAlarmState implements SignalingState{
 
     @Override
     public SignalingState activate(String code) {
-        System.out.println("Signaling is alarmed.");
         return this;
     }
 

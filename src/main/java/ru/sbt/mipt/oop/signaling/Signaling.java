@@ -2,13 +2,14 @@ package ru.sbt.mipt.oop.signaling;
 
 public class Signaling {
     SignalingState state;
-    String code = "123456";
+    String code;
 
     public Signaling() {
         this.state = new SignalingDeactivateState();
     }
 
-    public void activate() {
+    public void activate(String code) {
+        this.code = code;
         this.state = state.activate(this.code);
     }
 
@@ -22,5 +23,17 @@ public class Signaling {
 
     public void stopAlarm() {
         this.state = state.deactivate(this.code);
+    }
+
+    public boolean isActivated() {
+        return state instanceof SignalingActivateState;
+    }
+
+    public boolean isDeactivated() {
+        return state instanceof SignalingDeactivateState;
+    }
+
+    public boolean isAlarmed() {
+        return state instanceof SignalingAlarmState;
     }
 }
