@@ -16,7 +16,8 @@ public class EventManagerImpl implements EventManager {
         this.smartHome = smartHome;
     }
 
-    private void processEvent(SensorEvent sensorEvent) {
+    @Override
+    public void processEvent(SensorEvent sensorEvent) {
         for (EventHandler eventHandler : eventHandlers) {
             eventHandler.processEvent(smartHome, sensorEvent);
         }
