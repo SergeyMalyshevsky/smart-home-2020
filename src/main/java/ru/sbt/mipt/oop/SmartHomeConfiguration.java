@@ -153,8 +153,7 @@ public class SmartHomeConfiguration {
     @Bean
     SmartHomeRemoteControl smartHomeRemoteControl(Map<String, Command> commandsMap) throws IOException{
         SmartHomeRemoteControl remoteControl = new SmartHomeRemoteControl(buttonCommandMap());
-        remoteControlRegistry().registerRemoteControl(remoteControl, rcId()
-        );
+        remoteControlRegistry().registerRemoteControl(remoteControl, rcId());
         return remoteControl;
     }
 }
