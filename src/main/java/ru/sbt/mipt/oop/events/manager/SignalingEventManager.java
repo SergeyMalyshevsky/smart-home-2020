@@ -1,52 +1,60 @@
 package ru.sbt.mipt.oop.events.manager;
 
-import ru.sbt.mipt.oop.components.SmartHome;
-import ru.sbt.mipt.oop.events.handlers.IEventHandler;
+import ru.sbt.mipt.oop.events.handlers.EventHandler;
 import ru.sbt.mipt.oop.sensor.event.SensorEvent;
+import ru.sbt.mipt.oop.sensor.senders.SensorEventSender;
 import ru.sbt.mipt.oop.signaling.Signaling;
+import ru.sbt.mipt.oop.signaling.notifier.DummySmsSender;
 
 import static ru.sbt.mipt.oop.sensor.event.SensorEventType.ALARM_ACTIVATE;
 import static ru.sbt.mipt.oop.sensor.event.SensorEventType.ALARM_DEACTIVATE;
 
-public class SignalingEventManager implements IEventManager {
-    private final IEventManager eventManager;
+public class SignalingEventManager implements EventManager {
+    private final EventManager eventManager;
     private final Signaling signaling;
     private final String signalingCode;
 
-    public SignalingEventManager(IEventManager eventManager, String signalingCode) {
+    public SignalingEventManager(EventManager eventManager, String signalingCode) {
         this.eventManager = eventManager;
         this.signaling = new Signaling();
         this.signalingCode = signalingCode;
     }
 
-    private void processSignalingEvent(SensorEvent event) {
-        if (event.getType() == ALARM_ACTIVATE) {
-            signaling.activate(signalingCode);
-        }
-        if (event.getType() == ALARM_DEACTIVATE) {
-            signaling.deactivate(signalingCode);
-        }
-    }
-
     @Override
-    public void setSmartHome(SmartHome smartHome) {
-        this.eventManager.setSmartHome(smartHome);
-    }
-
-    @Override
-    public void addHandler(IEventHandler handler) {
+    public void addHandler(EventHandler handler) {
         this.eventManager.addHandler(handler);
     }
 
     @Override
+    public void handleEvents(SensorEventSender sensorEventSender) {
+        SensorEvent event;
+
+        while (true) {
+            // начинаем цикл обработки событий
+            event = sensorEventSender.getNextSensorEvent();
+
+            if (event == null) {
+                return;
+            }
+            this.processEvent(event);
+        }
+    }
+
+    @Override
     public void processEvent(SensorEvent event) {
+        DummySmsSender dummySmsSender = new DummySmsSender();
         if (event.getType() == ALARM_ACTIVATE || event.getType() == ALARM_DEACTIVATE) {
-            processSignalingEvent(event);
+            if (event.getType() == ALARM_ACTIVATE) {
+                signaling.activate(signalingCode);
+            }
+            if (event.getType() == ALARM_DEACTIVATE) {
+                signaling.deactivate(signalingCode);
+            }
         } else if (signaling.isAlarmed()) {
-            System.out.println("Sending sms");
+            dummySmsSender.sendSMS();
         } else if (signaling.isActivated()) {
             signaling.alarm();
-            System.out.println("Sending sms");
+            dummySmsSender.sendSMS();
         } else {
             eventManager.processEvent(event);
         }

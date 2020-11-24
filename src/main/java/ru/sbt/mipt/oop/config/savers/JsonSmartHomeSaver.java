@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class JsonSmartHomeSaver implements ISmartHomeSaver {
+public class JsonSmartHomeSaver implements SmartHomeSaver {
     private final String outputFilename;
 
     public JsonSmartHomeSaver(String outputFilename) {
