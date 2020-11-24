@@ -3,7 +3,7 @@ package ru.sbt.mipt.oop.sensor.senders;
 import ru.sbt.mipt.oop.sensor.event.SensorEvent;
 import ru.sbt.mipt.oop.sensor.event.SensorEventType;
 
-public class RandomSensorEventSender implements ISensorEventSender {
+public class RandomSensorEventSender implements SensorEventSender {
     @Override
     public SensorEvent getNextSensorEvent() {
         // pretend like we're getting the events from physical world, but here we're going to just generate some random events

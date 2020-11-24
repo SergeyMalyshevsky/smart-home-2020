@@ -10,7 +10,7 @@ import ru.sbt.mipt.oop.components.SmartHome;
 import static ru.sbt.mipt.oop.sensor.event.SensorEventType.DOOR_CLOSED;
 import static ru.sbt.mipt.oop.sensor.event.SensorEventType.DOOR_OPEN;
 
-public class DoorEventHandler implements IEventHandler {
+public class DoorEventHandler implements EventHandler {
     public DoorEventHandler() {
 
     }

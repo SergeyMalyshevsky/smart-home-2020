@@ -24,5 +24,6 @@ public class Room implements Actionable {
     public void execute(Action action) {
         lights.forEach(light -> light.execute(action));
         doors.forEach(door -> door.execute(action));
+        action.act(this);
     }
 }

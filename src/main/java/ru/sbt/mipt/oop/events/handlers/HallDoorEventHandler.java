@@ -4,11 +4,13 @@ import ru.sbt.mipt.oop.actions.Action;
 import ru.sbt.mipt.oop.actions.HallDoorCloseAction;
 import ru.sbt.mipt.oop.components.Door;
 import ru.sbt.mipt.oop.components.SmartHome;
+import ru.sbt.mipt.oop.sensor.command.senders.CommandSender;
+import ru.sbt.mipt.oop.sensor.command.senders.CommandSenderImpl;
 import ru.sbt.mipt.oop.sensor.event.SensorEvent;
 
 import static ru.sbt.mipt.oop.sensor.event.SensorEventType.DOOR_CLOSED;
 
-public class HallDoorEventHandler implements IEventHandler {
+public class HallDoorEventHandler implements EventHandler {
     public HallDoorEventHandler() {
 
     }
@@ -20,7 +22,8 @@ public class HallDoorEventHandler implements IEventHandler {
                 Door door = (Door) actionable;
                 if (door.getId().equals(event.getObjectId())) {
                     if (event.getType() == DOOR_CLOSED) {
-                        Action action = new HallDoorCloseAction(event);
+                        CommandSender commandSender = new CommandSenderImpl();
+                        Action action = new HallDoorCloseAction(event, commandSender);
                         smartHome.execute(action);
                     }
                 }

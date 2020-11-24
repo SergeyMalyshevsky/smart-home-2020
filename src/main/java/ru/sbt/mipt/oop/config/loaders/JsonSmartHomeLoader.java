@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class JsonSmartHomeLoader implements ISmartHomeLoader {
+public class JsonSmartHomeLoader implements SmartHomeLoader {
     private final String inputFilename;
 
     public JsonSmartHomeLoader(String inputFilename) {
