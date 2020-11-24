@@ -5,16 +5,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.sbt.mipt.oop.components.SmartHome;
-import ru.sbt.mipt.oop.config.loaders.ISmartHomeLoader;
+import ru.sbt.mipt.oop.config.loaders.SmartHomeLoader;
 import ru.sbt.mipt.oop.config.loaders.JsonSmartHomeLoader;
 import ru.sbt.mipt.oop.events.adapters.CCEventHandlerAdapter;
 import ru.sbt.mipt.oop.events.adapters.CCSensorEventToSensorEventMapper;
 import ru.sbt.mipt.oop.events.adapters.EventTypeMapper;
 import ru.sbt.mipt.oop.events.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
-import ru.sbt.mipt.oop.events.handlers.IEventHandler;
+import ru.sbt.mipt.oop.events.handlers.EventHandler;
 import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
 import ru.sbt.mipt.oop.events.manager.EventManager;
+import ru.sbt.mipt.oop.events.manager.EventManagerImpl;
 import ru.sbt.mipt.oop.sensor.event.SensorEventType;
 
 import java.io.IOException;
@@ -29,28 +30,28 @@ public class SmartHomeConfiguration {
     @Bean
     SmartHome smartHome() throws IOException {
         String INPUT_CONFIG_FILE = "smart-home-1.js";
-        ISmartHomeLoader smartHomeLoader = new JsonSmartHomeLoader(INPUT_CONFIG_FILE);
+        SmartHomeLoader smartHomeLoader = new JsonSmartHomeLoader(INPUT_CONFIG_FILE);
         return smartHomeLoader.load();
     }
 
     @Bean
-    IEventHandler lightEventHandler() {
+    EventHandler lightEventHandler() {
         return new LightEventHandler();
     }
 
     @Bean
-    IEventHandler doorEventHandler() {
+    EventHandler doorEventHandler() {
         return new DoorEventHandler();
     }
 
     @Bean
-    IEventHandler hallDoorEventHandler() {
+    EventHandler hallDoorEventHandler() {
         return new HallDoorEventHandler();
     }
 
     @Bean
-    EventManager eventManager(List<IEventHandler> eventHandlers) throws IOException {
-        return new EventManager(smartHome(), eventHandlers);
+    EventManager eventManager(List<EventHandler> eventHandlers) throws IOException {
+        return new EventManagerImpl(smartHome(), eventHandlers);
     }
 
     @Bean
