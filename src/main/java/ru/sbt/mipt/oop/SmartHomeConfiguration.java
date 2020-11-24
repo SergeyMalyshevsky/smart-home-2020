@@ -4,9 +4,12 @@ import com.coolcompany.smarthome.events.SensorEventsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import rc.RemoteControlRegistry;
 import ru.sbt.mipt.oop.components.SmartHome;
 import ru.sbt.mipt.oop.config.loaders.SmartHomeLoader;
 import ru.sbt.mipt.oop.config.loaders.JsonSmartHomeLoader;
+import ru.sbt.mipt.oop.control.SmartHomeRemoteControl;
+import ru.sbt.mipt.oop.control.commands.*;
 import ru.sbt.mipt.oop.events.adapters.CCEventHandlerAdapter;
 import ru.sbt.mipt.oop.events.adapters.CCSensorEventToSensorEventMapper;
 import ru.sbt.mipt.oop.events.adapters.EventTypeMapper;
@@ -17,6 +20,7 @@ import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
 import ru.sbt.mipt.oop.events.manager.EventManager;
 import ru.sbt.mipt.oop.events.manager.EventManagerImpl;
 import ru.sbt.mipt.oop.sensor.event.SensorEventType;
+import ru.sbt.mipt.oop.signaling.Signaling;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -82,5 +86,75 @@ public class SmartHomeConfiguration {
         SensorEventsManager sensorEventsManager = new SensorEventsManager();
         sensorEventsManager.registerEventHandler(cCEventHandlerAdapter);
         return sensorEventsManager;
+    }
+
+    @Bean
+    Signaling signaling() {
+        return new Signaling();
+    }
+
+    @Bean
+    String signalingCode() {
+        return "123456";
+    }
+
+    @Bean
+    public Command activateSignalingCommand() {
+        return new ActivateSignalingCommand(signaling(), signalingCode());
+    }
+
+    @Bean
+    public Command closeHallDoorCommand() throws IOException {
+        return new CloseHallDoorCommand(smartHome());
+    }
+
+    @Bean
+    public Command setOffAllLightsCommand() throws IOException {
+        return new SetOffAllLightsCommand(smartHome());
+    }
+
+    @Bean
+    public Command setOnAllLightsCommand() throws IOException {
+        return new SetOnAllLightsCommand(smartHome());
+    }
+
+    @Bean
+    public Command setOnHallLightCommand() throws IOException {
+        return new SetOnHallLightCommand(smartHome());
+    }
+
+    @Bean
+    public Command signalingSetAlarmCommand() {
+        return new SignalingSetAlarmCommand(signaling());
+    }
+
+    @Bean
+    public Map<String, Command> buttonCommandMap() throws IOException{
+        Map<String, Command> buttonCommandMap = new HashMap<>();
+        buttonCommandMap.put("A", activateSignalingCommand());
+        buttonCommandMap.put("B", closeHallDoorCommand());
+        buttonCommandMap.put("C", setOffAllLightsCommand());
+        buttonCommandMap.put("D", setOnAllLightsCommand());
+        buttonCommandMap.put("1", setOnHallLightCommand());
+        buttonCommandMap.put("2", signalingSetAlarmCommand());
+        return buttonCommandMap;
+    }
+
+    @Bean
+    RemoteControlRegistry remoteControlRegistry() {
+        return new RemoteControlRegistry();
+    }
+
+    @Bean
+    String rcId() {
+        return "007";
+    }
+
+    @Bean
+    SmartHomeRemoteControl smartHomeRemoteControl(Map<String, Command> commandsMap) throws IOException{
+        SmartHomeRemoteControl remoteControl = new SmartHomeRemoteControl(buttonCommandMap());
+        remoteControlRegistry().registerRemoteControl(remoteControl, rcId()
+        );
+        return remoteControl;
     }
 }
