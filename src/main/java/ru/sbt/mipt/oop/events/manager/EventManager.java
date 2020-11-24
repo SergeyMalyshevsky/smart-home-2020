@@ -8,4 +8,5 @@ import ru.sbt.mipt.oop.sensor.senders.SensorEventSender;
 public interface EventManager {
     void addHandler(EventHandler handler);
     void handleEvents(SensorEventSender sensorEventSender);
+    void processEvent(SensorEvent sensorEvent);
 }

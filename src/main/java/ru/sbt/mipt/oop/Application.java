@@ -8,6 +8,7 @@ import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
 import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
 import ru.sbt.mipt.oop.events.manager.EventManagerImpl;
 import ru.sbt.mipt.oop.events.manager.EventManager;
+import ru.sbt.mipt.oop.events.manager.SignalingEventManager;
 import ru.sbt.mipt.oop.sensor.event.SensorEvent;
 import ru.sbt.mipt.oop.sensor.senders.SensorEventSender;
 import ru.sbt.mipt.oop.sensor.senders.RandomSensorEventSender;
@@ -29,6 +30,7 @@ public class Application {
 
     public static void main(String... args) throws IOException {
         String INPUT_CONFIG_FILE = "smart-home-1.js";
+        String SIGNALING_CODE = "123456";
 
         // считываем состояние дома из файла
         SmartHomeLoader smartHomeLoader = new JsonSmartHomeLoader(INPUT_CONFIG_FILE);
@@ -39,8 +41,9 @@ public class Application {
         eventManager.addHandler(new DoorEventHandler());
         eventManager.addHandler(new HallDoorEventHandler());
         SensorEventSender sensorEventSender = new RandomSensorEventSender();
+        EventManager signalingEventManager = new SignalingEventManager(eventManager, SIGNALING_CODE);
 
-        Application application = new Application(eventManager, sensorEventSender);
+        Application application = new Application(signalingEventManager, sensorEventSender);
         application.run();
     }
 
