@@ -2,6 +2,6 @@ package ru.sbt.mipt.oop.sensor.senders;
 
 import ru.sbt.mipt.oop.sensor.event.SensorEvent;
 
-public interface ISensorEventSender {
+public interface SensorEventSender {
     SensorEvent getNextSensorEvent();
 }

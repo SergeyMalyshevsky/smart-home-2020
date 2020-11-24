@@ -7,7 +7,7 @@ import ru.sbt.mipt.oop.sensor.event.SensorEvent;
 
 import static ru.sbt.mipt.oop.sensor.event.SensorEventType.*;
 
-public class LightEventHandler implements IEventHandler {
+public class LightEventHandler implements EventHandler {
 
     public LightEventHandler() {
 
