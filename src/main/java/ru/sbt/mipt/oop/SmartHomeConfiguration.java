@@ -9,7 +9,6 @@ import ru.sbt.mipt.oop.config.loaders.SmartHomeLoader;
 import ru.sbt.mipt.oop.config.loaders.JsonSmartHomeLoader;
 import ru.sbt.mipt.oop.events.adapters.CCEventHandlerAdapter;
 import ru.sbt.mipt.oop.events.adapters.CCSensorEventToSensorEventMapper;
-import ru.sbt.mipt.oop.events.adapters.EventTypeMapper;
 import ru.sbt.mipt.oop.events.handlers.DoorEventHandler;
 import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
 import ru.sbt.mipt.oop.events.handlers.EventHandler;
@@ -55,7 +54,7 @@ public class SmartHomeConfiguration {
     }
 
     @Bean
-    EventTypeMapper eventTypeMapper() {
+    CCSensorEventToSensorEventMapper eventMapper() {
         Map<String, SensorEventType> map = new HashMap<>();
         map.put("LightIsOn", LIGHT_ON);
         map.put("LightIsOff", LIGHT_OFF);
@@ -63,12 +62,7 @@ public class SmartHomeConfiguration {
         map.put("DoorIsClosed", DOOR_CLOSED);
         map.put("DoorIsUnlocked", DOOR_OPEN);
         map.put("DoorIsLocked", DOOR_CLOSED);
-        return new EventTypeMapper(map);
-    }
-
-    @Bean
-    CCSensorEventToSensorEventMapper eventMapper(EventTypeMapper mapper) {
-        return new CCSensorEventToSensorEventMapper(mapper);
+        return new CCSensorEventToSensorEventMapper(map);
     }
 
     @Bean

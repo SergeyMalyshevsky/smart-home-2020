@@ -7,13 +7,12 @@ import ru.sbt.mipt.oop.sensor.event.SensorEventType;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.sbt.mipt.oop.sensor.event.SensorEventType.*;
 
 public class CCSensorEventToSensorEventMapper {
-    Map<String, SensorEventType> map;
+    Map<String, SensorEventType> map = new HashMap<>();
 
-    public CCSensorEventToSensorEventMapper(EventTypeMapper mapper) {
-        this.map = mapper.getMap();
+    public CCSensorEventToSensorEventMapper(Map<String, SensorEventType> map) {
+        this.map = map;
     }
 
     private SensorEventType getSensorEventType(CCSensorEvent event) {
