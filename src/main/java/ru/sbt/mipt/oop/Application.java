@@ -1,50 +1,14 @@
 package ru.sbt.mipt.oop;
 
-import ru.sbt.mipt.oop.components.SmartHome;
-import ru.sbt.mipt.oop.config.loaders.SmartHomeLoader;
-import ru.sbt.mipt.oop.config.loaders.JsonSmartHomeLoader;
-import ru.sbt.mipt.oop.events.handlers.DoorEventHandler;
-import ru.sbt.mipt.oop.events.handlers.HallDoorEventHandler;
-import ru.sbt.mipt.oop.events.handlers.LightEventHandler;
-import ru.sbt.mipt.oop.events.manager.EventManagerImpl;
-import ru.sbt.mipt.oop.events.manager.EventManager;
-import ru.sbt.mipt.oop.events.manager.SignalingEventManager;
-import ru.sbt.mipt.oop.sensor.event.SensorEvent;
-import ru.sbt.mipt.oop.sensor.senders.SensorEventSender;
-import ru.sbt.mipt.oop.sensor.senders.RandomSensorEventSender;
+import com.coolcompany.smarthome.events.SensorEventsManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.io.IOException;
 
 public class Application {
-    private final EventManager eventManager;
-    private final SensorEventSender sensorEventSender;
-
-    public Application(EventManager eventManager, SensorEventSender sensorEventSender) {
-        this.eventManager = eventManager;
-        this.sensorEventSender = sensorEventSender;
+    public static void main(String... args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(SmartHomeConfiguration.class);
+        SensorEventsManager sensorEventsManager = context.getBean(SensorEventsManager.class);
+        sensorEventsManager.start();
     }
-
-    public void run() throws IOException {
-        eventManager.handleEvents(sensorEventSender);
-    }
-
-    public static void main(String... args) throws IOException {
-        String INPUT_CONFIG_FILE = "smart-home-1.js";
-        String SIGNALING_CODE = "123456";
-
-        // считываем состояние дома из файла
-        SmartHomeLoader smartHomeLoader = new JsonSmartHomeLoader(INPUT_CONFIG_FILE);
-        SmartHome smartHome = smartHomeLoader.load();
-
-        EventManager eventManager = new EventManagerImpl(smartHome);
-        eventManager.addHandler(new LightEventHandler());
-        eventManager.addHandler(new DoorEventHandler());
-        eventManager.addHandler(new HallDoorEventHandler());
-        SensorEventSender sensorEventSender = new RandomSensorEventSender();
-        EventManager signalingEventManager = new SignalingEventManager(eventManager, SIGNALING_CODE);
-
-        Application application = new Application(signalingEventManager, sensorEventSender);
-        application.run();
-    }
-
 }
